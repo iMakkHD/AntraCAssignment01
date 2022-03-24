@@ -1,178 +1,257 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Collections;
+/*
+1. Stringbuilder when you want to change a mutable string. String when you are using an immutable 
 
-//1.
-Console.WriteLine(sizeof(sbyte));
-Console.WriteLine(sizeof(byte));
-Console.WriteLine(sizeof(short));
-Console.WriteLine(sizeof(ushort));
-Console.WriteLine(sizeof(int));
-Console.WriteLine(sizeof(uint));
-Console.WriteLine(sizeof(long));
-Console.WriteLine(sizeof(ulong));
-Console.WriteLine(sizeof(float));
-Console.WriteLine(sizeof(double));
-Console.WriteLine(sizeof(decimal));
+2. The array class
 
-//2.
-Console.WriteLine("Enter number of centuries");
-int c = int.Parse(Console.ReadLine());
-int centuries = c;
-int years = centuries * 100;
-double days = years * 365.24;
-double hours = 24 * days;
-ulong minutes = (ulong)(hours * 60);
-ulong seconds = 60 * minutes;
-ulong ms = 1000 * seconds;
-ulong micro = 1000 * ms;
-ulong nano = 1000 * micro;
-Console.WriteLine(centuries + " centuries = " + years + " years = " + days + " days = " + hours + " hours = " + minutes + " minutes = " + seconds + " seconds = " + ms + " milliseconds = " + micro + " microseconds = " + nano + " nanoseconds");
+3. int[] arr = new int[] {0, 1, 2, 3}
+Array.sort(arr);
 
-/*Test your knowledge
-1. What happens when you divide an int variable by 0
-int num = 2;
-Console.WriteLine(num/0);
-Result: System.DivideByZeroException: 'Attempted to divide by zero.'
- 
-2. What happens when you divide a double variable by 0?
-double num = 2.0;
-Console.WriteLine("start");
-Console.WriteLine(num / 0);
-Console.WriteLine("Done");
+4. You can take advantage of the Count() method or length of the array
 
-Result: infinity
+5. Only a single data type can be stored in an array
 
-3. What happens when you overflow an int variable, that is, 
-set it to a value beyond its range?
+6. CopyTo requires an array to copy elements to while clone returns a new identical array.
 
-Answer: An error will be given saying that the number is not in the 32 bit representation. Must be cast to another larger type.
 
-4. What is the difference between x = y++; and x = ++y;?
+//Question 1
+int[] arr1 = new int[10] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} ;
 
-Answer: x= y++ means that y is assigned to the value of x then incremented after. x = ++y means y is incremented then assigned to the value of x.
-
-5. What is the difference between break,continue, 
-and return when used inside a loop statement?
-
-Answer: break means exit the statement in the loop. Return ends the method immediately by returning the value. Continue forces the next iteration of the loop.
-
-6. What are the three parts of a for statement and which of them are required? 
-
-Answer: initialization, condition, iterator. All can be neglected. However, this will create an infinite loop
-
-7.What is the difference between the = and == operators? 
-
-Answer: = is for assignment while == is to check for equality
-
-8.Does the following statement compile? for ( ; true; ) ; 
-yes but it is infinite
-
-9.What does the underscore _ represent in a switch expression? 
-it means the default keyword can match anything to be executed if reached.
-
-10.What interface must an object implement to be enumerated over by using the foreach statement?
-IEnumerator
-
-*/
-
-//Chapter03 Exercise03
-int max = 100;
-for (int i = 0; i < max; i++)
+int[] arr2 = new int[arr1.Length];
+for(int i = 0; i < arr1.Length; i++)
 {
-    if (i % 3 == 0 & i % 5 == 0)
+    arr2[i] = arr1[i];
+}
+foreach(int num in arr2)
+{
+    Console.Write(num);
+}
+Console.WriteLine();
+foreach(int num in arr1)
+{
+    Console.Write(num);
+}
+Console.WriteLine();
+/////////////////////////////////////////
+
+//Question 2
+/*bool condition = false;
+ArrayList al = new ArrayList();
+while(condition == false)
+{
+    Console.WriteLine("Enter command (+ item, - item, or -- to clear)):");
+    string key = Console.ReadLine();
+    string[] stuff = key.Split(' ');
+    if(stuff[0] == "+")
     {
-        Console.WriteLine("fizzbuzz");
+        al.Add(stuff[1]);
     }
-    else if (i % 5 == 0)
+    else if (stuff[0] == "-")
     {
-        Console.WriteLine("buzz");
-    }
-    else if (i % 3 == 0)
-    {
-        Console.WriteLine("fizz");
+        al.Remove(stuff[1]);
     }
     else
     {
-        Console.WriteLine(i);
+        al = new ArrayList();
+    }
+    foreach(object obj in al)
+    {
+        Console.Write(obj + " ");
+    }
+    Console.WriteLine();
+}
+
+//Question 3
+static int[] FindPrimesInRange(int startNum, int endNum)
+{
+    ArrayList pl = new ArrayList();
+    int count = 0;
+    bool isPrime = true;
+    for (int i = startNum; i <= endNum; i++)
+    {
+        for (int j = 2; j <= endNum; j++)
+        {
+            if (i != j && i % j == 0)
+            {
+                isPrime = false;
+                break;
+            }
+        }
+        if (isPrime)
+        {
+            pl.Add(i);
+            count++;
+        }
+        isPrime = true;
+    }
+    int[] arr = new int[count];
+    int n = 0;
+    foreach(int num in pl)
+    {
+        arr[n] = num;
+        n++;
+    }
+    return arr;
+}
+
+//Question 4
+static int[] RotateAndSum(int[] input, int k)
+{
+    int[] sum = new int[input.Length];
+    int[] arr1 = new int[input.Length];
+    for(int i = 0; i < k; i++)
+    {
+        for(int j = 0; j < arr1.Length; j++)
+        {
+            arr1[(i + 1) % arr1.Length] = input[i];
+        }
+        for(int j = 0; j < arr1.Length; j++)
+        {
+            sum[j] = sum[j] + arr1[j];
+        }
+        arr1 = new int[input.Length];
+    }
+    return sum;
+}
+
+//Question 5
+static int[] Longest(int[] input)
+{
+    int count = 1;
+    int max = 0;
+    ArrayList al = new ArrayList();
+    ArrayList temp = new ArrayList();
+    al.Add(input[0]);
+    for(int i = 1; i < input.Length; i++)
+    {
+        if(input[i] == input[i-1])
+        {
+            temp.Add(input[i]);
+            count++;
+        }
+        else
+        {
+            if(count > max)
+            {
+                al = new ArrayList();
+                foreach(int num in temp)
+                {
+                    al.Add((num);
+                }
+                temp = new ArrayList
+            }
+        }
     }
 }
 
-/*
-int max1 = 500; 
-for (byte i = 0; i < max1; i++) { 
-    WriteLine(i); 
+// Question 7
+
+static int mostFrequent(int[] arr)
+{
+
+    Array.Sort(arr);
+    int cNum = arr[0];
+    int max = 0;
+    int count = 1;
+    int maxNum = arr[0];
+    for(int i = 1; i < arr.Length; i++)
+    {
+        if(arr[i] == cNum)
+        {
+            count++;
+        }
+        else
+        {
+            cNum = arr[i];
+            if(count > max)
+            {
+                max = count;
+                maxNum = arr[i - 1];
+            }
+        }
+    }
+    Console.WriteLine("The number " + maxNum + " is the most frequent");
+    return maxNum;
 }
 
-Answer: Error is given because it must be Console.WriteLine(i);
+// Question 1
+Console.WriteLine("Give a word to reverse: ");
+string word = Console.ReadLine();
+string newWord = "";
+for(int i = word.Length - 1; i >= 0; i--)
+{
+    newWord = newWord + word[i];
+}
+
+Console.WriteLine(newWord);
+
+
+/////////////////////
+ArrayList list = new ArrayList();
+list.Add(".");
+list.Add(",");
+list.Add(":");
+list.Add(";");
+list.Add("=");
+list.Add("(");
+list.Add(")");
+list.Add("&");
+list.Add("[");
+list.Add("]");
+list.Add("\"");
+list.Add("'");
+list.Add("\\");
+list.Add("/");
+list.Add("!");
+list.Add("?");
+list.Add(" ");
+Console.WriteLine("Give a sentence to reverse: ");
+string sent = Console.ReadLine();
+string newSent = string.Join(" ", sent.Split('.','?',',',':',';','=','(',')','&','[',']','\"','\'','\\','/','!', ' ').Reverse()).ToString();
+
+Console.WriteLine(newSent);
+
+
+Console.WriteLine("Enter a sentence for palindromes: ");
+string s = Console.ReadLine();
+string[] words = s.Split(',','?',' ','!',':','.');
+ArrayList p = new ArrayList();
+foreach(string word1 in words)
+{
+    string newWord1 = "";
+    for (int i = word1.Length - 1; i >= 0; i--)
+    {
+        newWord1 = newWord1 + word1[i];
+    }
+    if(newWord1 == word1)
+    {
+        p.Add(word1);
+    }
+}
+
+Console.WriteLine(String.Join(", ", p));
 */
 
-int correct = new Random().Next(3) + 1;
-Console.WriteLine("Guess a number between 1 and 3");
-int guess = int.Parse(Console.ReadLine());
-if (guess == correct)
-{
-    Console.WriteLine("Correct");
-}
-else if(guess < correct)
-{
-    Console.WriteLine("Too low");
-}
-else
-{
-    Console.WriteLine("Too high");
-}
+//Last Question
+string url = Console.ReadLine();
+string[] arr1 = url.Split("://");
+string protocol = arr1[0];
+string[] arr2 = arr1[1].Split("/");
+string server = arr2[0];
+string resource = arr2[1];
+Console.WriteLine(protocol);
+Console.WriteLine(server);
+Console.WriteLine(resource);    
 
-//Print-a-Pyramid
-for (int i = 0; i < 5; i++)
-{
-    for (int j = 1; j <= 5 - i; j++)
-    {
-        Console.Write(" ");
-    }
-    for (int j = 1; j <= 2 * i - 1; j++) {
-        Console.Write("*");
-    }
-    Console.Write("\n");
-}
 
-DateTime today = DateTime.Today;
-DateTime birthdate = Convert.ToDateTime("10/29/1999");
-//Console.WriteLine(today.ToString());
-// Calculate the age.
-var age = today.Year - birthdate.Year;
 
-//leap year
-if (birthdate.Date > today.AddYears(--age))
-{
-    age--;
-}
-Console.WriteLine(age.ToString());
 
-DateTime time = DateTime.Now;
 
-if(time.Hour <= 8)
-{
-    Console.WriteLine("Good Morning");
-}
-if (time.Hour <= 16)
-{
-    Console.WriteLine("Good Afternoon");
-}
-if (time.Hour <= 21)
-{
-    Console.WriteLine("Good Evening");
-}
-else
-{
-    Console.WriteLine("Good Night");
-}
 
-Console.WriteLine("\n");
 
-for(int i = 1; i < 5; i++)
-{
-    for(int j = 0; j <= 24; j+=i)
-    {
-        Console.Write(j + ", ");
-    }
-    Console.WriteLine("\n");
-}
+
+
+
+
+
+
